@@ -27,6 +27,6 @@ public class Hands : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = faceModel.position + offset; 
+        //transform.position = faceModel.position + offset; 
     }
 }
