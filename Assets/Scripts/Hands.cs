@@ -7,7 +7,10 @@ public class Hands : MonoBehaviour
 {
     ARFace face;
 
-    List<Vector3> rightPath = new List<Vector3>();
+    [SerializeField] int[] rightPathIndices;
+
+    [SerializeField] Transform faceModel;
+    [SerializeField] Vector3 offset;
 
     // Start is called before the first frame update
     void Start()
@@ -16,11 +19,7 @@ public class Hands : MonoBehaviour
 
         if(face.vertices.Length > 0 )
         {
-            rightPath.Add( face.vertices[423] );
-            rightPath.Add( face.vertices[266] );
-            rightPath.Add( face.vertices[330] );
-            rightPath.Add( face.vertices[449] );
-            rightPath.Add( face.vertices[261] );
+                
         }
 
     }
@@ -28,6 +27,6 @@ public class Hands : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position = faceModel.position + offset; 
     }
 }
