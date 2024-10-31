@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,28 +6,64 @@ using UnityEngine.XR.ARFoundation;
 
 public class Hands : MonoBehaviour
 {
-    ARFace face;
 
-    [SerializeField] int[] rightPathIndices;
+    [SerializeField] Transform facePosition;
+    [SerializeField] Transform rightHandPosition;
+    [SerializeField] Transform leftHandPosition;
 
-    [SerializeField] Transform faceModel;
-    [SerializeField] Vector3 offset;
+    [SerializeField] List<Transform> rightPath = new List<Transform>();
+    [SerializeField] List<Transform> leftPath = new List<Transform>();
+    [SerializeField] Vector3 rightPathOffset;
+    [SerializeField] Vector3 leftPathOffset;
 
     // Start is called before the first frame update
     void Start()
     {
-        face = GetComponent<ARFace>();
+        MoveHandsToFace();
+    }
 
-        if(face.vertices.Length > 0 )
+
+    void MoveHandsToFace()
+    {
+        rightHandPosition.DOMove(facePosition.position, 0.5f).OnComplete(() =>
         {
-                
+            StartCoroutine(FollowPath(rightHandPosition,rightPath, rightPathOffset));
+        });
+
+        leftHandPosition.DOMove(facePosition.position, 0.5f).OnComplete(() =>
+        {
+            StartCoroutine(FollowPath(leftHandPosition, leftPath, leftPathOffset));
+        });
+    }
+
+    IEnumerator FollowPath(Transform hand, List<Transform> path, Vector3 pathOffset)
+    {
+        for (int i = 0; i < path.Count; i++)
+        {
+            float t = 0;
+            float duration = 0.8f;
+            Vector3 initialPos = hand.position;
+
+            while (t < 1)
+            {
+                t += Time.deltaTime / duration;
+                Debug.Log(t);
+                hand.position = Vector3.Lerp(initialPos, path[i].position + pathOffset, t);
+                yield return null;
+            }
+
         }
 
+        OnAnimationEnd();
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnAnimationEnd()
     {
-        //transform.position = faceModel.position + offset; 
+        rightHandPosition.position = facePosition.position;
+        leftHandPosition.position = facePosition.position;
+
+        StartCoroutine(FollowPath(rightHandPosition, rightPath, rightPathOffset));
+        StartCoroutine(FollowPath(leftHandPosition, leftPath, leftPathOffset));
     }
+
 }
