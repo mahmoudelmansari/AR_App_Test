@@ -45,25 +45,44 @@ public class HandsAR : MonoBehaviour
         {
             StartCoroutine(FollowPath(rightHandPosition, rightPath, rightPathOffset));
         });
-        leftHandPosition.DOMove(facePosition, 0.5f);
+
+        leftHandPosition.DOMove(facePosition, 0.5f).OnComplete(() =>
+        {
+            StartCoroutine(FollowPath(leftHandPosition, leftPath, leftPathOffset));
+
+        });
     }
 
     IEnumerator FollowPath(Transform hand, List<Vector3> path, Vector3 pathOffset)
     {
-        for (int i = 0; i < path.Count; i++)
-        {
-            float t = 0;
+        while (true)
+        { 
+            float t;
             float duration = 0.8f;
-            Vector3 initialPos = hand.position;
-
-            while (t < 1)
+            
+            for (int i = 0; i < path.Count; i++)
             {
-                t += Time.deltaTime / duration;
-                Debug.Log(t);
-                hand.position = Vector3.Lerp(initialPos, path[i] + pathOffset, t);
-                yield return null;
-            }
+                t = 0;
+                Vector3 initialPos = hand.position;
 
+                while (t < 1)
+                {
+                    t += Time.deltaTime / duration;
+                    hand.position = Vector3.Lerp(initialPos, path[i] + pathOffset, t);
+                    yield return null;
+                }
+
+                t = 0;
+                duration = 0.2f;
+                Vector3 handPos = hand.position;
+
+                while (t < 1)
+                {
+                    t += Time.deltaTime / duration;
+                    hand.position = Vector3.Lerp(handPos, facePosition, t);
+                    yield return null;
+                }
+            }
         }
     }
 

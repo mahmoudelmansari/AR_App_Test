@@ -22,7 +22,6 @@ public class Hands : MonoBehaviour
         MoveHandsToFace();
     }
 
-
     void MoveHandsToFace()
     {
         rightHandPosition.DOMove(facePosition.position, 0.5f).OnComplete(() =>
@@ -34,36 +33,40 @@ public class Hands : MonoBehaviour
         {
             StartCoroutine(FollowPath(leftHandPosition, leftPath, leftPathOffset));
         });
+
     }
 
     IEnumerator FollowPath(Transform hand, List<Transform> path, Vector3 pathOffset)
     {
-        for (int i = 0; i < path.Count; i++)
+        while(true)
         {
-            float t = 0;
+            float t;
             float duration = 0.8f;
-            Vector3 initialPos = hand.position;
+           
+            for (int i = 0; i < path.Count; i++)
+            {
+                t = 0;
+                Vector3 initialPos = hand.position;
+                while (t < 1)
+                {
+                    t += Time.deltaTime / duration;
+                    hand.position = Vector3.Lerp(initialPos, path[i].position + pathOffset, t);
+                    yield return null;
+                }
+            }
 
+            t = 0;
+            duration = 0.2f;
+            Vector3 facPos = facePosition.position;
+            Vector3 handPos = hand.position;
+            
             while (t < 1)
             {
                 t += Time.deltaTime / duration;
-                Debug.Log(t);
-                hand.position = Vector3.Lerp(initialPos, path[i].position + pathOffset, t);
+                hand.position = Vector3.Lerp(handPos, facPos, t);
                 yield return null;
             }
 
         }
-
-        OnAnimationEnd();
     }
-
-    void OnAnimationEnd()
-    {
-        rightHandPosition.DOMove(facePosition.position, 0.25f);
-        leftHandPosition.DOMove(facePosition.position, 0.25f);
-
-        StartCoroutine(FollowPath(rightHandPosition, rightPath, rightPathOffset));
-        StartCoroutine(FollowPath(leftHandPosition, leftPath, leftPathOffset));
-    }
-
 }
