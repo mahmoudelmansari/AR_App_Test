@@ -59,8 +59,8 @@ public class Hands : MonoBehaviour
 
     void OnAnimationEnd()
     {
-        rightHandPosition.position = facePosition.position;
-        leftHandPosition.position = facePosition.position;
+        rightHandPosition.DOMove(facePosition.position, 0.25f);
+        leftHandPosition.DOMove(facePosition.position, 0.25f);
 
         StartCoroutine(FollowPath(rightHandPosition, rightPath, rightPathOffset));
         StartCoroutine(FollowPath(leftHandPosition, leftPath, leftPathOffset));

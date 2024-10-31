@@ -2136,13 +2136,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1720376648}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5760143c8441ec48bc6906a2567468b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faceModel: {fileID: 1400355873}
-  offset: {x: 0, y: 1.2, z: -1.27}
   facePosition: {fileID: 1576645914}
   rightHandPosition: {fileID: 479793177}
   leftHandPosition: {fileID: 1221532477}
@@ -2153,7 +2151,8 @@ MonoBehaviour:
   - {fileID: 1972669406}
   - {fileID: 1438304977}
   leftPath: []
-  pathOffset: {x: -0.03, y: -0.38, z: 0}
+  rightPathOffset: {x: 0, y: 0, z: 0}
+  leftPathOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &1734415221
 PrefabInstance:
   m_ObjectHideFlags: 0
