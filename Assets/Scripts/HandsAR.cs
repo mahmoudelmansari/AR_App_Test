@@ -1,13 +1,16 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.XR.ARFoundation;
 
 public class HandsAR : MonoBehaviour
 {
     ARFaceManager faceManager;
     ARFace face;
+    FaceData faceData;
 
     const int chinIndex = 152;
     Vector3 chinPosition;
@@ -15,6 +18,9 @@ public class HandsAR : MonoBehaviour
 
     [SerializeField] Transform rightHandPosition;
     [SerializeField] Transform leftHandPosition;
+
+    [SerializeField] MultiPositionConstraint rightConstraint;
+    [SerializeField] MultiPositionConstraint leftConstraint;
 
     [SerializeField] Vector3 rightPathOffset;
     [SerializeField] Vector3 leftPathOffset;
@@ -29,8 +35,22 @@ public class HandsAR : MonoBehaviour
     void Start()
     {
         face = GetComponent<ARFace>();
+        faceManager = FindAnyObjectByType<ARFaceManager>();
+        faceData = FindAnyObjectByType<FaceData>();
+
         faceManager.facesChanged += GetPath;
-        if(face.vertices.Length > 0)
+        rightHandPosition = faceData.rightHandPosition;
+        leftHandPosition = faceData.leftHandPosition;
+
+        var rightData = rightConstraint.data.sourceObjects;
+        rightData.SetTransform(0, rightHandPosition);
+        rightConstraint.data.sourceObjects = rightData;
+
+        var leftData = leftConstraint.data.sourceObjects;
+        leftData.SetTransform(0, leftHandPosition);
+        leftConstraint.data.sourceObjects = leftData;
+
+        if (face.vertices.Length > 0)
         {
             chinPosition = face.vertices[chinIndex];
             facePosition = chinPosition - Vector3.up * 0.5f;
